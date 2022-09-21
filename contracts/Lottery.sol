@@ -31,6 +31,9 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
     enum LotteryState {
         OPEN,
         CALCULATING
+        // uint256, this will mean that:
+        // 0 = OPEN
+        // 1 = CALCULATING
     }
 
     /* State Variables */
@@ -57,14 +60,14 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
     /* Functions */
     constructor(
         address vrfCoordinatorV2, // contract
+        uint256 entranceFee,
         bytes32 gasLane,
         uint32 callbackGasLimit,
         uint64 subscriptionId,
-        uint256 entranceFee,
         uint256 interval
     ) VRFConsumerBaseV2(vrfCoordinatorV2) {
-        i_entranceFee = entranceFee;
         i_vrfCoordinator = VRFCoordinatorV2Interface(vrfCoordinatorV2);
+        i_entranceFee = entranceFee;
         i_gasLane = gasLane;
         i_subscriptionId = subscriptionId;
         i_callbackGasLimit = callbackGasLimit;
@@ -178,5 +181,9 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
 
     function getRequestConfirmations() public pure returns (uint256) {
         return REQUEST_CONFIRMATIONS;
+    }
+
+    function getInterval() public view returns (uint256) {
+        return i_interval;
     }
 }
