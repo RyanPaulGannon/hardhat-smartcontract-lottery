@@ -1,7 +1,8 @@
+const { verify } = require("../utils/verify")
 const { network, ethers } = require("hardhat")
-const { developmentChains, networkConfig, verify } = require("../helper-hardhat-config")
+const { developmentChains, networkConfig } = require("../helper-hardhat-config")
 
-const FUND_SUB_AMOUNT = ethers.utils.parseEther("2")
+const FUND_SUB_AMOUNT = ethers.utils.parseEther("20")
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
   const { deploy, log } = deployments
@@ -47,4 +48,4 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   log("--------------------")
 }
 
-module.exports.tags = ["all", "raffle"]
+module.exports.tags = ["all", "lottery"]
