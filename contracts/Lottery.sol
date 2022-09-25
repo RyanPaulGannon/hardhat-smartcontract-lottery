@@ -47,7 +47,7 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
     /* Lottery variables */
     uint256 private immutable i_interval;
     uint256 private immutable i_entranceFee;
-    uint256 private s_lastTimeStamp;
+    uint256 private s_lastestTimeStamp;
     address private s_recentWinner;
     address payable[] private s_players;
     LotteryState private s_lotteryState;
@@ -72,7 +72,7 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
         i_subscriptionId = subscriptionId;
         i_callbackGasLimit = callbackGasLimit;
         s_lotteryState = LotteryState.OPEN;
-        s_lastTimeStamp = block.timestamp;
+        s_lastestTimeStamp = block.timestamp;
         i_interval = interval;
     }
 
@@ -107,7 +107,7 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
         )
     {
         bool isOpen = LotteryState.OPEN == s_lotteryState;
-        bool timePassed = ((block.timestamp - s_lastTimeStamp) > i_interval);
+        bool timePassed = ((block.timestamp - s_lastestTimeStamp) > i_interval);
         bool hasPlayers = s_players.length > 0;
         bool hasBalance = address(this).balance > 0;
         upkeepNeeded = (isOpen && timePassed && hasPlayers && hasBalance);
@@ -146,7 +146,7 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
         s_recentWinner = recentWinner;
         s_players = new address payable[](0);
         s_lotteryState = LotteryState.OPEN;
-        s_lastTimeStamp = block.timestamp;
+        s_lastestTimeStamp = block.timestamp;
         (bool success, ) = recentWinner.call{value: address(this).balance}("");
         if (!success) {
             revert Lottery__TransferFailed();
@@ -179,8 +179,8 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
         return s_players.length;
     }
 
-    function getLasTimeStamp() public view returns (uint256) {
-        return s_lastTimeStamp;
+    function getLastestTimeStamp() public view returns (uint256) {
+        return s_lastestTimeStamp;
     }
 
     function getRequestConfirmations() public pure returns (uint256) {
