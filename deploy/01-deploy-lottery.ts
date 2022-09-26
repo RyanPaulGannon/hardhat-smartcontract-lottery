@@ -1,16 +1,22 @@
-const { verify } = require("../utils/verify")
-const { network, ethers } = require("hardhat")
-const { developmentChains, networkConfig } = require("../helper-hardhat-config")
+import verify from "../utils/verify"
+import { DeployFunction } from "hardhat-deploy/types"
+import { HardhatRuntimeEnvironment } from "hardhat/types"
+import {
+  networkConfig,
+  developmentChains,
+  VERIFICATION_BLOCK_CONFIRMATIONS,
+} from "../helper-hardhat-config"
 
-const FUND_SUB_AMOUNT = ethers.utils.parseEther("2")
+const FUND_SUB_AMOUNT = "1000000000000000000000"
 
-module.exports = async ({ getNamedAccounts, deployments }) => {
+const deployLottery: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
+  const { deployments, getNamedAccounts, network, ethers } = hre
   const { deploy, log } = deployments
   const { deployer } = await getNamedAccounts()
-  let chainId = network.config.chainId
-  let vrfCoordinatorV2Address, subscriptionId
+  const chainId = 31337
+  let vrfCoordinatorV2Address: string | undefined, subscriptionId: string | undefined
 
-  if (developmentChains.includes(network.name)) {
+  if (chainId == 31337) {
     const vrfCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock")
     vrfCoordinatorV2Address = vrfCoordinatorV2Mock.address
     const transactionReponse = await vrfCoordinatorV2Mock.createSubscription()
@@ -18,9 +24,15 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     subscriptionId = transactionReceipt.events[0].args.subId
     await vrfCoordinatorV2Mock.fundSubscription(subscriptionId, FUND_SUB_AMOUNT)
   } else {
-    vrfCoordinatorV2Address = networkConfig[chainId]["vrfCoordinatorV2"]
-    subscriptionId = networkConfig[chainId]["subscriptionId"]
+    vrfCoordinatorV2Address = networkConfig[network.config.chainId!]["vrfCoordinatorV2"]
+    subscriptionId = networkConfig[network.config.chainId!]["subscriptionId"]
   }
+  const waitBlockConfirmations = developmentChains.includes(network.name)
+    ? 1
+    : VERIFICATION_BLOCK_CONFIRMATIONS
+
+  log("----------------------------------------------------")
+
   const entranceFee = networkConfig[chainId]["entranceFee"]
   const gasLane = networkConfig[chainId]["gasLane"]
   const callbackGasLimit = networkConfig[chainId]["callbackGasLimit"]
@@ -38,7 +50,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     from: deployer,
     args: args,
     log: true,
-    waitConfirmations: network.config.blockconfirmations || 1,
+    waitConfirmations: waitBlockConfirmations || 1,
   })
 
   if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
@@ -48,4 +60,5 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   log("--------------------")
 }
 
-module.exports.tags = ["all", "lottery"]
+export default deployLottery
+deployLottery.tags = ["all", "lottery"]

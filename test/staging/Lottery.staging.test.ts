@@ -1,6 +1,8 @@
-const { assert, expect } = require("chai")
-const { getNamedAccounts, network, ethers } = require("hardhat")
-const { developmentChains } = require("../../helper-hardhat-config")
+import { BigNumber } from "ethers"
+import { assert, expect } from "chai"
+import { Lottery } from "../../typechain-types"
+import { network, ethers, getNamedAccounts } from "hardhat"
+import { developmentChains } from "../../helper-hardhat-config"
 
 // These tests are for running on a testnet
 // Before testing, we need to check what kind of network we're on
@@ -9,7 +11,9 @@ developmentChains.includes(network.name)
   ? // If we are running on a local network, we can skip these tests. If we're on a development chain, run the tests
     describe.skip
   : describe("Lottery Staging Test", () => {
-      let lottery, entranceFee, deployer
+      let lottery: Lottery
+      let entranceFee: BigNumber
+      let deployer: string
 
       beforeEach(async () => {
         deployer = (await getNamedAccounts()).deployer
@@ -27,7 +31,7 @@ developmentChains.includes(network.name)
           // Setup the listener before entering the lottery
           // Just incase the blockchain moves real fast
 
-          await new Promise(async (resolve, reject) => {
+          await new Promise<void>(async (resolve, reject) => {
             lottery.once("WinnerPicked", async () => {
               console.log("Winner Picked, event fired!")
               try {
@@ -40,7 +44,7 @@ developmentChains.includes(network.name)
                 // This will revert because there won't be an object at 0
                 await expect(lottery.getPlayer(0)).to.be.reverted
                 assert.equal(recentWinner.toString(), accounts[0].address)
-                assert.equal(lotteryState.toString(), 0)
+                assert.equal(lotteryState.toString(), "0")
                 assert.equal(
                   winnerEndingBalance.toString(),
                   // They should get there entrance fee back as they are the only ones who've entered the lottery

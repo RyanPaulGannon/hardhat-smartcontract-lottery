@@ -1,6 +1,6 @@
-const { run } = require("hardhat")
+import { run } from "hardhat"
 
-async function verify(address, args) {
+async function verify(address: string, args: any[]) {
   console.log("Verifying contract...")
   try {
     await run("verify:verify", {
@@ -16,6 +16,4 @@ async function verify(address, args) {
   }
 }
 
-module.exports = {
-  verify,
-}
+export default verify
