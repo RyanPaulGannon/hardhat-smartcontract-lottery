@@ -21,7 +21,7 @@ module.exports = {
     },
     goerli: {
       chainId: 5,
-      blockconfirmations: 6,
+      blockconfirmations: 1,
       url: GOERLI_RPC_URL,
       accounts: [PRIVATE_KEY],
     },
@@ -46,8 +46,8 @@ module.exports = {
     player: {
       default: 1,
     },
-    mocha: {
-      timeout: 20000,
-    },
+  },
+  mocha: {
+    timeout: 500000,
   },
 }

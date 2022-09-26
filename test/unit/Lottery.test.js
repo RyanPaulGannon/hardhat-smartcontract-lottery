@@ -2,6 +2,7 @@ const { assert, expect } = require("chai")
 const { getNamedAccounts, deployments, network, ethers } = require("hardhat")
 const { developmentChains, networkConfig } = require("../../helper-hardhat-config")
 
+// These test only need to run on a local network
 !developmentChains.includes(network.name)
   ? describe.skip
   : describe("Lottery Unit Test", () => {
@@ -166,7 +167,7 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
             // Once the "WinnerPicked" event is trigger, then we want to do something
             lottery.once("WinnerPicked", async () => {
               try {
-                const recentWinner = await lottery.getRecentWinner()
+                // const recentWinner = await lottery.getRecentWinner()
                 const lotteryState = await lottery.getLotteryState()
                 const endingTimeStamp = await lottery.getLastestTimeStamp()
                 const numPlayers = await lottery.getNumberOfPlayers()
