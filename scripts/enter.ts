@@ -1,4 +1,5 @@
-const { ethers } = require("hardhat")
+import { ethers } from "hardhat"
+import "@nomiclabs/hardhat-ethers"
 
 async function enterLottery() {
   const lottery = await ethers.getContract("Lottery")

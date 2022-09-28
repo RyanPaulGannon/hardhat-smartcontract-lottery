@@ -186,7 +186,7 @@ import { developmentChains, networkConfig } from "../../helper-hardhat-config"
                 // Lottery is reset and so should the players array
                 assert.equal(numPlayers.toString(), "0")
                 // State of the lottery post reset should be OPEN = 0
-                assert.equal(lotteryState.toString(), "0")
+                assert.equal(lotteryState, 0)
                 // This is saying that the winning balance should be the money that the winner put in, plus the rest of the money that the other players put in
                 assert.equal(
                   winnerBalance.toString(),
