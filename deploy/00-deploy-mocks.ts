@@ -20,7 +20,7 @@ const deployMocks: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
       args: args,
     })
     log("Mocks deployed")
-    log("--------------")
+    log("----------------------------------------------------")
   }
 }
 

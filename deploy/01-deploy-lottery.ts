@@ -57,7 +57,7 @@ const deployLottery: DeployFunction = async (hre: HardhatRuntimeEnvironment) => 
     log("Verifying ...")
     await verify(lottery.address, args)
   }
-  log("--------------------")
+  log("----------------------------------------------------")
 }
 
 export default deployLottery
