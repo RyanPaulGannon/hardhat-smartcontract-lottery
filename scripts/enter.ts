@@ -1,7 +1,7 @@
 import { ethers } from "hardhat"
 import "@nomiclabs/hardhat-ethers"
 
-async function enterLottery() {
+const enterLottery = async () => {
   const lottery = await ethers.getContract("Lottery")
   const entranceFee = await lottery.getEntranceFee()
   await lottery.enterLottery({ value: entranceFee + 1 })
