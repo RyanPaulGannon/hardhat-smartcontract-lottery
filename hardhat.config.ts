@@ -15,44 +15,44 @@ const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || ""
 
 /** @type import('hardhat/config').HardhatUserConfig */
 const config: HardhatUserConfig = {
-  defaultNetwork: "hardhat",
-  networks: {
-    hardhat: {
-      chainId: 31337,
+    defaultNetwork: "hardhat",
+    networks: {
+        hardhat: {
+            chainId: 31337,
+        },
+        localhost: {
+            chainId: 31337,
+        },
+        goerli: {
+            chainId: 5,
+            url: GOERLI_RPC_URL,
+            accounts: [PRIVATE_KEY],
+        },
     },
-    localhost: {
-      chainId: 31337,
+    solidity: {
+        compilers: [{ version: "0.8.8" }, { version: "0.6.6" }],
     },
-    goerli: {
-      chainId: 5,
-      url: GOERLI_RPC_URL,
-      accounts: [PRIVATE_KEY],
+    etherscan: {
+        apiKey: ETHERSCAN_API_KEY,
     },
-  },
-  solidity: {
-    compilers: [{ version: "0.8.8" }, { version: "0.6.6" }],
-  },
-  etherscan: {
-    apiKey: ETHERSCAN_API_KEY,
-  },
-  gasReporter: {
-    enabled: true,
-    currency: "USD",
-    outputFile: "gas-report.txt",
-    noColors: true,
-    coinmarketcap: COINMARKETCAP_API_KEY,
-  },
-  namedAccounts: {
-    deployer: {
-      default: 0,
+    gasReporter: {
+        enabled: true,
+        currency: "USD",
+        outputFile: "gas-report.txt",
+        noColors: true,
+        coinmarketcap: COINMARKETCAP_API_KEY,
     },
-    player: {
-      default: 1,
+    namedAccounts: {
+        deployer: {
+            default: 0,
+        },
+        player: {
+            default: 1,
+        },
     },
-  },
-  mocha: {
-    timeout: 500000,
-  },
+    mocha: {
+        timeout: 500000,
+    },
 }
 
 export default config
